@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1 style="color:blue;"> APIs</h1>
+<hr>
+
+<h3 style="color:gray;"> User Register</h3>
+<form action="/api/register" method="post">
+    <table>
+        <tr>
+            <td>Email :</td><td><input type="email" name="email" value="" required=""></td>
+        </tr>
+           <tr>
+            <td>User_name :</td><td><input type="text" name="name" value="" required=""></td>
+        </tr>
+           <tr>
+            <td>Password :</td><td><input type="password" name="password" value="" required=""></td>
+        </tr>
+           <tr>
+            <td>S.A :</td><td><input type="text" name="answer" value="" required=""></td>
+        </tr>
+        </tr>
+           <tr>
+            <td></td><td><input type="submit"  value="Submit" ></td>
+        </tr>
+
+    </table>
+</form>
+<hr>
+
+
+
+<h3 style="color:gray;"> User Login</h3>
+<form action="/api/login" method="post">
+    <table>
+        <tr>
+            <td>Email :</td><td><input type="email" name="email" value="" required=""></td>
+        </tr>
+
+        <tr>
+            <td>Password :</td><td><input type="password" name="password" value="" required=""></td>
+        </tr>
+
+        </tr>
+           <tr>
+            <td></td><td><input type="submit"  value="Submit" ></td>
+        </tr>
+
+    </table>
+</form>
+<hr>
+
+<h3 style="color:gray;"> User Logout</h3>
+<form action="/api/logout">
+    <table>
+           <tr>
+            <td></td><td><input type="submit"  value="Submit" ></td>
+        </tr>
+
+    </table>
+</form>
+<hr>
+
+
+<h3 style="color:gray;"> User Session</h3>
+<form action="/api/whoami">
+    <table>
+           <tr>
+            <td></td><td><input type="submit"  value="Submit" ></td>
+        </tr>
+
+    </table>
+</form>
+<hr>
+
+<h3 style="color:gray;"> Change Password</h3>
+<form action="/api/reset_password" method="post">
+    <table>
+        <tr>
+            <td>User_name :</td><td><input type="text" name="name" value="" required=""></td>
+        </tr>
+        <tr>
+            <td>Email :</td><td><input type="email" name="email" value="" required=""></td>
+        </tr>
+        <tr>
+            <td>Security Answer :</td><td><input type="text" name="answer" value="" required=""></td>
+        </tr>
+        <tr>
+            <td>New Password :</td><td><input type="password" name="password" value="" required=""></td>
+        </tr>
+
+        </tr>
+           <tr>
+            <td></td><td><input type="submit"  value="Submit" ></td>
+        </tr>
+
+    </table>
+</form>
+<hr>
+
+
+<h3 style="color:gray;"> Set pet Information</h3>
+<form action="/api/set_pet_info" method="post">
+    <table>
+
+        <tr>
+            <td>User Email :</td><td><input type="email" name="email" value="" required=""></td>
+        </tr>
+        <tr>
+            <td>Pet Name :</td><td><input type="text" name="name" value="" required=""></td>
+        </tr>
+        <tr>
+            <td>Pet Breed :</td><td><input type="text" name="breed" value="" required=""></td>
+        </tr>
+        <tr>
+            <td>Pet Age :</td><td><input type="text" name="age" value="" required=""></td>
+        </tr>
+
+
+        <tr>
+            <td>Pet Gender :</td><td><input type="radio" name="gender" value="male" checked> Male
+                              <input type="radio" name="gender" value="female"> Female<br></td>
+
+        </tr>
+        <tr>
+            <td></td><td><input type="submit"  value="Submit" ></td>
+        </tr>
+
+    </table>
+</form>
+<hr>
+<h3 style="color:gray;"> Get pet Information</h3>
+<form action="/api/get_pet_info">
+    <table>
+           <tr>
+            <td></td><td><input type="submit"  value="Submit" ></td>
+        </tr>
+
+    </table>
+</form>
+<hr>
+
+
+</body>
+</html>
