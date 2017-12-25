@@ -316,19 +316,17 @@ def set_pet_info():
 #              GET PET INFORMATION              #
 #                                               #
 #################################################
-@app.route("/get_pet_info", methods=['GET'])
+@app.route("/api/get_pet_info", methods=['GET'])
 def get_pet_info():
     try:
         sumSessionCounter()
         email = session['email']
         result = mdb.my_pet_info(email)
-        return mdb.get_all_user()
 
     except Exception as exp:
         print('get_pet_info() :: Got exception: %s' % exp)
         print(traceback.format_exc())
-        return 'some thing is wrong!'
-
+        return "%s" % mdb.my_pet_info(email)
 
 #################################################
 #                                               #
