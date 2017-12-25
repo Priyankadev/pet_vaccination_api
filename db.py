@@ -83,6 +83,19 @@ class Mdb:
                 email = data['email']
         return name
 
+#############################################
+#                                           #
+#         GET USER ID BY SESSION            #
+#                                           #
+#############################################
+    def get_user_id_by_session(self, email):
+        result = self.db.user.find({'email': email})
+        id = ''
+        if result:
+            for data in result:
+                id = data['_id']
+        return id
+
 
 ##############################################
 #                                            #

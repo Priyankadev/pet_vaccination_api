@@ -128,7 +128,8 @@ def whoami():
         ret['User'] = (" hii i am %s !!" % session['name'])
         email = session['email']
         ret['Session'] = email
-        ret['User_Id'] = mdb.get_user_id_by_session(email)
+        # ret['User_Id'] = mdb.get_user_id_by_session(email)
+        ret['error'] = 0
 
     except Exception as exp:
         print('whoami() :: Got exception: %s' % exp)
@@ -164,17 +165,20 @@ def add_user():
         check = mdb.check_email(email)
 
         if check:
-            ret['msg'] = 'This Email Already Used'
-
+            ret['msg'] = 'This Email Already Used!'
+            ret['error'] = 1
+            return jsonify(ret)
         else:
             mdb.add_user(name, email, pw_hash, answer)
-            ret['msg'] = 'User Is Added Successfully'
+            ret['msg'] = 'User Is Added Successfully!'
+            ret['error'] = 0
             return json.dumps(ret)
-            # return 'Add user!'
+
     except Exception as exp:
         print('add_user() :: Got exception: %s' % exp)
         print(traceback.format_exc())
-
+        ret['msg'] = 'Something is wrong!'
+        ret['error'] = 1
 
 #############################################
 #                                           #
@@ -183,7 +187,7 @@ def add_user():
 #############################################
 @app.route('/api/login', methods=['POST'])
 def login():
-    ret = {'err': 0}
+    ret = {}
     try:
         sumSessionCounter()
         email = request.form['email']
@@ -209,23 +213,22 @@ def login():
                 ret['msg'] = 'Login successful'
                 ret['err'] = 0
                 ret['token'] = token.decode('UTF-8')
-                templateData = {'title': 'singin page'}
+
             else:
-                return 'Something is wrong!'
+                ret['msg'] = 'Password is not match!'
+                ret['error'] = 1
+                return jsonify(ret)
 
         else:
-            # Login Failed!
-            return 'Login Failed'
-
-            ret['msg'] = 'Login Failed'
-            ret['err'] = 1
+            ret['msg'] = 'email is not exist!'
+            ret['error'] = 1
+            return jsonify(ret)
 
     except Exception as exp:
         ret['msg'] = '%s' % exp
         ret['err'] = 1
         print(traceback.format_exc())
-    # return jsonify(ret)
-    return json.dumps(ret)
+    return jsonify(ret)
 
 
 #############################################
@@ -235,12 +238,12 @@ def login():
 #############################################
 @app.route('/api/logout')
 def clearsession():
-    ret = {'err': 0}
+    ret = {}
     try:
         sumSessionCounter()
         email = session['email']
         session.clear()
-        ret['msg'] = 'Login successful'
+        ret['msg'] = 'Logout successful'
         ret['err'] = 0
     except Exception as exp:
         ret['msg'] = '%s' % exp
@@ -302,22 +305,33 @@ def reset_password():
 #############################################
 @app.route("/api/set_pet_info", methods=['POST'])
 def set_pet_info():
-    ret = {'msg': 'Pet Is Added Successfully'}
+    ret = {}
     try:
+        sumSessionCounter()
         email = request.form['email']
         name = request.form['name']
         breed = request.form['breed']
         age = request.form['age']
         gender = request.form['gender']
+        email_session = session['email']
 
-        mdb.add_pet(name, email, breed, age, gender)
+        if email == email_session:
+            mdb.add_pet(name, email, breed, age, gender)
+            ret["msg"] = 'Add pet successfully!'
+            ret['err'] = 0
+            return json.dumps(ret)
 
-        return json.dumps(ret)
-        # return 'Add user!'
+        else:
+            ret["msg"] = 'your email is wrong!'
+            ret['err'] = 1
+            return json.dumps(ret)
+
     except Exception as exp:
         print('set_pet_info() :: Got exception: %s' % exp)
         print(traceback.format_exc())
-        return 'some thing is wrong!'
+        ret["msg"] = 'something is wrong!'
+        ret['err'] = 1
+        return json.dumps(ret)
 
 
 #################################################
@@ -327,17 +341,20 @@ def set_pet_info():
 #################################################
 @app.route("/api/get_pet_info", methods=['GET'])
 def get_pet_info():
-    # ret = {'msg': 'Pet Is Added Successfully'}
+    ret = {}
     try:
         sumSessionCounter()
         email = session['email']
         result = mdb.my_pet_info(email)
+        ret["msg"] = "%s" % mdb.my_pet_info(email)
+        ret['err'] = 1
+        return json.dumps(ret)
 
     except Exception as exp:
         print('get_pet_info() :: Got exception: %s' % exp)
         print(traceback.format_exc())
         return "%s" % mdb.my_pet_info(email)
-
+#
 #################################################
 #                                               #
 #                 Main Server                   #
