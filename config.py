@@ -1,11 +1,11 @@
-DB_HOST = '127.0.0.1'
+DB_HOST = 'ds131697.mlab.com'
 
-DB_PORT = 27017
+DB_PORT = 31697
 
-AUTH_DB_NAME = 'admin'
+AUTH_DB_NAME = 'api'
 
-DB_NAME = 'pet_api'
+DB_NAME = 'api'
 
-DB_USER = 'admin'
+DB_USER = 'auser'
 
-DB_PASS = '123'
+DB_PASS = 'apass'

@@ -1,0 +1,13 @@
+{
+  "name": "PET VACCINATION API",
+  "description": "PET VACCINATION API",
+  "keywords": [
+    "Flask",
+    "python",
+    "sample"
+  ],
+  "repository": "https://github.com/Priyankadev/pet_vaccination_api.git",
+  "addons": [
+    "heroku-mongo"
+  ]
+}

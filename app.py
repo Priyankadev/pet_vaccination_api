@@ -129,10 +129,13 @@ def whoami():
         email = session['email']
         ret['Session'] = email
         ret['User_Id'] = mdb.get_user_id_by_session(email)
+
     except Exception as exp:
+        print('whoami() :: Got exception: %s' % exp)
+        print(traceback.format_exc())
         ret['error'] = 1
-        ret['user'] = 'user is not login'
-    return JSONEncoder().encode(ret)
+        ret['msg'] = '%s' % exp
+    return jsonify(ret)
 
 
 @app.route('/')
@@ -147,7 +150,7 @@ def index():
 #############################################
 @app.route("/api/register", methods=['POST'])
 def add_user():
-    ret = {'msg': 'User Is Added Successfully'}
+    ret = {}
     try:
         email = request.form['email']
         name = request.form['name']
@@ -159,12 +162,13 @@ def add_user():
         passw = bcrypt.check_password_hash(pw_hash, password)
 
         check = mdb.check_email(email)
+
         if check:
-            return 'This Email Already Used'
+            ret['msg'] = 'This Email Already Used'
 
         else:
             mdb.add_user(name, email, pw_hash, answer)
-
+            ret['msg'] = 'User Is Added Successfully'
             return json.dumps(ret)
             # return 'Add user!'
     except Exception as exp:
@@ -253,7 +257,6 @@ def clearsession():
 def reset_password():
     try:
         ret = {}
-        ret = {"error": 0}
         email = request.form['email']
         name = request.form['name']
         answer = request.form['answer']
@@ -263,27 +266,33 @@ def reset_password():
         passw = bcrypt.check_password_hash(pw_hash, password)
 
         if mdb.user_exists(email):
-            name = mdb.get_security_name(email)
-            print 'database name', name
+            nm = mdb.get_security_name(email)
 
-            if name == name:
+            if name == nm:
                 ans = mdb.get_security_answer(email)
 
                 if answer == ans:
                     mdb.set_password(email, pw_hash)
-                    return 'Done!'
+                    # ret["msg"] = "Done !"
+                    ret['msg'] = 'Reset Password Successfully!'
+                    # return 'Done!'
                 else:
-                    return 'failed'
+                    ret["msg"] = 'your answer is not match!'
+                    ret['err'] = 1
 
             else:
-                return'failed1'
+                ret["msg"] = 'your name is wrong!'
+                ret['err'] = 1
         else:
-            return'failed2'
-        ret['msg'] = 'Search Successfully!'
-        ret['err'] = 0
+            ret["msg"] = 'Email id is incorrect!'
+            ret['err'] = 1
+
     except Exception as exp:
         print 'reset_password():: Got exception: %s' % exp
         print(traceback.format_exc())
+        ret["error"] = 1
+        ret["msg"] = '%s' % exp
+    return jsonify(ret)
 
 
 #############################################
@@ -318,6 +327,7 @@ def set_pet_info():
 #################################################
 @app.route("/api/get_pet_info", methods=['GET'])
 def get_pet_info():
+    # ret = {'msg': 'Pet Is Added Successfully'}
     try:
         sumSessionCounter()
         email = session['email']
