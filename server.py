@@ -246,7 +246,7 @@ def clearsession():
 
 #############################################
 #                                           #
-#                GET PASSWORD               #
+#              REGET PASSWORD               #
 #                                           #
 #############################################
 @app.route("/api/reset_password", methods=['POST'])
@@ -256,8 +256,6 @@ def reset_password():
         ret = {"error": 0}
         email = request.form['email']
         name = request.form['name']
-
-
         answer = request.form['answer']
         password = request.form['password']
 
@@ -290,7 +288,7 @@ def reset_password():
 
 #############################################
 #                                           #
-#                  ADD USER                 #
+#              SET PET INFORMATION          #
 #                                           #
 #############################################
 @app.route("/api/set_pet_info", methods=['POST'])
@@ -312,9 +310,10 @@ def set_pet_info():
         print(traceback.format_exc())
         return 'some thing is wrong!'
 
+
 #################################################
 #                                               #
-#               get all users                   #
+#              GET PET INFORMATION              #
 #                                               #
 #################################################
 @app.route("/get_pet_info", methods=['GET'])
@@ -333,7 +332,7 @@ def get_pet_info():
 
 #################################################
 #                                               #
-#             Main Server                       #
+#                 Main Server                   #
 #                                               #
 #################################################
 if __name__ == '__main__':

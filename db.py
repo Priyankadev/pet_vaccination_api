@@ -113,7 +113,6 @@ class Mdb:
             {'$set': {'password': pw_hash}},
             upsert=True, multi=True)
 
-
     def add_pet(self, name, email, breed, age, gender):
         try:
             ts = datetime.datetime.today().strftime("%a %b %d %X  %Y ")
@@ -129,7 +128,6 @@ class Mdb:
         except Exception as exp:
             print("add_pet() :: Got exception: %s", exp)
             print(traceback.format_exc())
-
 
     def my_pet_info(self, email):
         result = self.db.pet.find({'email': email})
