@@ -2,142 +2,204 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <center><title>PET VACCINATION API</title>
+    <title>PET VACCINATION API</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
+
 <body>
-<h1  style="color:blue;"> PET VACCINATION API</h1>
+<div class="container">
+
+<center><h1  style="color:blue;"> PET VACCINATION API</h1></center>
+<hr>
+<div class="row">
+<div class="col-sm-6">
+    <center><h3 > User Register</h3></center>
+    <form action="/api/register" method="post">
+    <div class="form-group">
+        <label class="control-label col-sm-3" >Email:</label>
+        <div class="col-sm-9">
+            <input type="email" name="email" placeholder="Enter email" value="" required="">
+        </div>
+
+        <label class="control-label col-sm-3" >User_name:</label>
+        <div class="col-sm-9">
+            <input type="text" name="name" placeholder="Enter name" value="" required="">
+        </div>
+
+        <label class="control-label col-sm-3" >Password:</label>
+        <div class="col-sm-9">
+            <input type="password" name="password" value="" placeholder="Enter password" required="">
+        </div>
+
+        <label class="control-label col-sm-3" >S.A:</label>
+        <div class="col-sm-9">
+            <input type="text" name="answer" value="" placeholder="Enter security answer" required="">
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-9">
+                <button type="submit" class="btn btn-default">Submit</button>
+            </div>
+        </div>
+    </div>
+</form>
+</div>
+
+<div class="col-sm-6">
+    <center><h3> User Login</h3></center>
+    <form action="/api/login" method="post">
+    <div class="form-group">
+        <label class="control-label col-sm-3" for="email">Email:</label>
+        <div class="col-sm-9">
+            <input type="email" name="email" placeholder="Enter email" value="" required="">
+        </div>
+
+        <label class="control-label col-sm-3" for="email">Password:</label>
+        <div class="col-sm-9">
+            <input type="password" name="password" value="" placeholder="Enter password" required="">
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-9">
+                <button type="submit" class="btn btn-default">Submit</button>
+            </div>
+        </div>
+    </div>
+</form>
+</div>
+</div>
+    <hr>
+
+
+
+<div class="row">
+<div class="col-sm-6">
+    <center><h3> User Logout</h3></center>
+    <form action="/api/logout">
+        <div class="form-group">
+
+            <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-9">
+                <button type="submit" class="btn btn-default">Submit</button>
+            </div>
+        </div>
+        </div>
+    </form>
+</div>
+
+<div class="col-sm-6">
+    <center><h3 > User Session</h3></center>
+    <form action="/api/whoami">
+    <div class="form-group">
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-9">
+                <button type="submit" class="btn btn-default">Submit</button>
+            </div>
+        </div>
+    </div>
+</form>
+</div>
+</div>
 <hr>
 
-<h3 > User Register</h3>
-<form action="/api/register" method="post">
-    <table>
-        <tr>
-            <td>Email :</td><td><input type="email" name="email" value="" required=""></td>
-        </tr>
-           <tr>
-            <td>User_name :</td><td><input type="text" name="name" value="" required=""></td>
-        </tr>
-           <tr>
-            <td>Password :</td><td><input type="password" name="password" value="" required=""></td>
-        </tr>
-           <tr>
-            <td>S.A :</td><td><input type="text" name="answer" value="" required=""></td>
-        </tr>
-        </tr>
-           <tr>
-            <td></td><td><input type="submit"  value="Submit" ></td>
-        </tr>
+<div class="row">
+<div class="col-sm-6">
+    <center><h3> Change Password</h3></center>
+    <form action="/api/reset_password" method="post">
+    <div class="form-group">
+        <label class="control-label col-sm-3" for="email">User_name:</label>
+        <div class="col-sm-9">
+            <input type="text" name="name" placeholder="Enter name" value="" required="">
+        </div>
 
-    </table>
+        <label class="control-label col-sm-3" for="email">Email:</label>
+        <div class="col-sm-9">
+            <input type="email" name="email" placeholder="Enter email" value="" required="">
+        </div>
+
+
+
+        <label class="control-label col-sm-3" for="email">Password:</label>
+        <div class="col-sm-9">
+            <input type="password" name="password" value="" placeholder="Enter new password" required="">
+        </div>
+
+        <label class="control-label col-sm-3" for="email">Security_Answer:</label>
+        <div class="col-sm-9">
+            <input type="text" name="answer" value="" placeholder="Enter security answer" required="">
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-9">
+                <button type="submit" class="btn btn-default">Submit</button>
+            </div>
+        </div>
+    </div>
+</form>
+</div>
+
+
+<div class="col-sm-6">
+    <center><h3> Set pet Information</h3></center>
+    <form action="/api/set_pet_info" method="post">
+    <div class="form-group">
+        <label class="control-label col-sm-3" >Email:</label>
+        <div class="col-sm-9">
+            <input type="email" name="email" placeholder="Enter email" value="" required="">
+        </div>
+
+        <label class="control-label col-sm-3" >Pet_Name:</label>
+        <div class="col-sm-9">
+            <input type="text" name="name" placeholder="Enter pet name" value="" required="">
+        </div>
+
+        <label class="control-label col-sm-3" >Pet_Breed:</label>
+        <div class="col-sm-9">
+            <input type="text" name="breed" placeholder="Enter pet breed" value="" required="">
+        </div>
+
+
+        <label class="control-label col-sm-3" >Pet_Age:</label>
+        <div class="col-sm-9">
+            <input type="text" name="age" placeholder="Enter pet Age" value="" required="">
+        </div>
+
+
+
+        <label class="control-label col-sm-3" for="email">Pet_Gender:</label>
+        <div class="col-sm-9">
+            <input type="radio" name="gender" value="male" checked> Male
+            <input type="radio" name="gender" value="female"> Female<br>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-9">
+                <button type="submit" class="btn btn-default">Submit</button>
+            </div>
+        </div>
+    </div>
+</form>
+</div>
+</div>
+    <hr>
+<div class="row">
+<div class="col-sm-6">
+    <center><h3> Get pet Information</h3></center>
+    <form action="/api/get_pet_info">
+    <div class="form-group">
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-9">
+                <button type="submit" class="btn btn-default">Submit</button>
+            </div>
+        </div>
+    </div>
 </form>
 <hr>
+</div>
+</div>
+    <hr>
 
-
-
-<h3> User Login</h3>
-<form action="/api/login" method="post">
-    <table>
-        <tr>
-            <td>Email :</td><td><input type="email" name="email" value="" required=""></td>
-        </tr>
-
-        <tr>
-            <td>Password :</td><td><input type="password" name="password" value="" required=""></td>
-        </tr>
-
-        </tr>
-           <tr>
-            <td></td><td><input type="submit"  value="Submit" ></td>
-        </tr>
-
-    </table>
-</form>
-<hr>
-
-<h3> User Logout</h3>
-<form action="/api/logout">
-    <table>
-
-            <input type="submit"  value="Submit" >
-
-
-    </table>
-</form>
-<hr>
-
-
-<h3 > User Session</h3>
-<form action="/api/whoami">
-    <table>
-           <input type="submit"  value="Submit" >
-    </table>
-</form>
-<hr>
-
-<h3> Change Password</h3>
-<form action="/api/reset_password" method="post">
-    <table>
-        <tr>
-            <td>User_name :</td><td><input type="text" name="name" value="" required=""></td>
-        </tr>
-        <tr>
-            <td>Email :</td><td><input type="email" name="email" value="" required=""></td>
-        </tr>
-        <tr>
-            <td>Security Answer :</td><td><input type="text" name="answer" value="" required=""></td>
-        </tr>
-        <tr>
-            <td>New Password :</td><td><input type="password" name="password" value="" required=""></td>
-        </tr>
-
-        </tr>
-           <tr>
-            <td></td><td><input type="submit"  value="Submit" ></td>
-        </tr>
-
-    </table>
-</form>
-<hr>
-
-
-<h3> Set pet Information</h3>
-<form action="/api/set_pet_info" method="post">
-    <table>
-
-        <tr>
-            <td>User Email :</td><td><input type="email" name="email" value="" required=""></td>
-        </tr>
-        <tr>
-            <td>Pet Name :</td><td><input type="text" name="name" value="" required=""></td>
-        </tr>
-        <tr>
-            <td>Pet Breed :</td><td><input type="text" name="breed" value="" required=""></td>
-        </tr>
-        <tr>
-            <td>Pet Age :</td><td><input type="text" name="age" value="" required=""></td>
-        </tr>
-
-
-        <tr>
-            <td>Pet Gender :</td><td><input type="radio" name="gender" value="male" checked> Male
-                              <input type="radio" name="gender" value="female"> Female<br></td>
-
-        </tr>
-        <tr>
-            <td></td><td><input type="submit"  value="Submit" ></td>
-        </tr>
-
-    </table>
-</form>
-<hr>
-<h3> Get pet Information</h3>
-<form action="/api/get_pet_info">
-    <table>
-           <input type="submit"  value="Submit" >
-    </table>
-</form>
-<hr>
-
-</center>
+</div>
 </body>
 </html>

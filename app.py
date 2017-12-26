@@ -329,7 +329,7 @@ def set_pet_info():
     except Exception as exp:
         print('set_pet_info() :: Got exception: %s' % exp)
         print(traceback.format_exc())
-        ret["msg"] = 'something is wrong!'
+        ret["msg"] = 'User is not login!'
         ret['err'] = 1
         return json.dumps(ret)
 
@@ -347,14 +347,17 @@ def get_pet_info():
         email = session['email']
         result = mdb.my_pet_info(email)
         ret["msg"] = "%s" % mdb.my_pet_info(email)
-        ret['err'] = 1
+        ret['err'] = 0
         return json.dumps(ret)
 
     except Exception as exp:
         print('get_pet_info() :: Got exception: %s' % exp)
         print(traceback.format_exc())
-        return "%s" % mdb.my_pet_info(email)
-#
+        ret["msg"] = 'User is not login!'
+        ret['err'] = 1
+        return json.dumps(ret)
+
+
 #################################################
 #                                               #
 #                 Main Server                   #
