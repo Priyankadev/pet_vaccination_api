@@ -251,14 +251,14 @@ def set_pet_info(token):
     ret = {}
     try:
         email = request.form['email']
-        name = request.form['name']
+        pet_name = request.form['name']
         breed = request.form['breed']
         age = request.form['age']
         gender = request.form['gender']
         user_email = token['user']
 
         if email == user_email:
-            mdb.add_pet(name, email, breed, age, gender)
+            mdb.add_pet(pet_name, email, breed, age, gender)
             ret["msg"] = 'Add pet successfully!'
             ret['success'] = True
 

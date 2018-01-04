@@ -133,7 +133,7 @@ class Mdb:
         try:
             ts = datetime.datetime.today().strftime("%a %b %d %X  %Y ")
             rec = {
-                'name': name,
+                'pet_name': name,
                 'email': email,
                 'breed': breed,
                 'age': age,
