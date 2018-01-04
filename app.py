@@ -1,54 +1,33 @@
 from flask import Flask, request,  jsonify, render_template,\
     session, url_for, redirect, flash, send_from_directory
-from flask_login import LoginManager, UserMixin, login_user, login_required,\
-                        logout_user, current_user
-from flask_admin import Admin, BaseView, expose
-import uuid
-from uuid import getnode as get_mac
+# from flask_login import LoginManager, UserMixin, login_user, login_required,\
+#                         logout_user, current_user
+# from flask_admin import Admin, BaseView, expose
+# import uuid
 from flask.ext.bcrypt import Bcrypt
 from bson.objectid import ObjectId
 from functools import wraps
-import time
-from datetime import datetime, timedelta
+# import time
+from datetime import datetime
 import datetime
 import traceback
-import flask_login
-import flask
+# import flask_login
+# import flask
 import json
 import jwt
 import os
 from db import Mdb
-from werkzeug.utils import secure_filename
-from wtforms.fields import SelectField
-# from utils import log
+# from werkzeug.utils import secure_filename
+# from wtforms.fields import SelectField
+# # from utils import log
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 mdb = Mdb()
 
 
-##############################################################################
-#                                                                            #
-#                                                                            #
-#                                    SESSION                                 #
-#                                                                            #
-#                                                                            #
-##############################################################################
-@app.before_request
-def before_request():
-    flask.session.permanent = True
-    app.permanent_session_lifetime = datetime.timedelta(minutes=15)
-    flask.session.modified = True
-    flask.g.user = flask_login.current_user
-    # print'session in working'
-
-
 app.config['secretkey'] = 'some-strong+secret#key'
 app.secret_key = 'F12Zr47j\3yX R~X@H!jmM]Lwf/,?KT'
-
-# setup login manager
-login_manager = LoginManager()
-login_manager.init_app(app)
 
 
 ##############################################################################
@@ -64,27 +43,6 @@ class JSONEncoder(json.JSONEncoder):
             return str(o)
         return json.JSONEncoder.default(self, o)
 
-
-#############################################
-#                                           #
-#                SESSION COUNTER            #
-#                                           #
-#############################################
-def sumSessionCounter():
-    try:
-        session['counter'] += 1
-    except KeyError:
-        session['counter'] = 1
-
-
-##############################################
-#                                            #
-#               LOGIN MANAGER                #
-#                                            #
-##############################################
-@login_manager.unauthorized_handler
-def unauthorized_callback():
-    return redirect('/')
 
 
 #############################################
@@ -107,10 +65,11 @@ def token_required(f):
         # ensure that token is valid
         try:
             data = jwt.decode(token, app.config['secretkey'])
+
         except:
             return jsonify({'message': 'Invalid token!'})
 
-        return f(*args, **kwargs)
+        return f(data, *args, **kwargs)
 
     return decorated
 
@@ -121,16 +80,12 @@ def token_required(f):
 #                                            #
 ##############################################
 @app.route('/api/whoami')
-def whoami():
+@token_required
+def whoami(token):
     ret = {}
     try:
-        sumSessionCounter()
-        ret['User'] = (" hii i am %s !!" % session['name'])
-        email = session['email']
-        ret['Session'] = email
-        # ret['User_Id'] = mdb.get_user_id_by_session(email)
+        ret['User'] = token["user"]
         ret['error'] = 0
-
     except Exception as exp:
         print('whoami() :: Got exception: %s' % exp)
         print(traceback.format_exc())
@@ -167,18 +122,18 @@ def add_user():
         if check:
             ret['msg'] = 'This Email Already Used!'
             ret['error'] = 1
-            return jsonify(ret)
         else:
             mdb.add_user(name, email, pw_hash, answer)
             ret['msg'] = 'User Is Added Successfully!'
             ret['error'] = 0
-            return json.dumps(ret)
 
     except Exception as exp:
         print('add_user() :: Got exception: %s' % exp)
         print(traceback.format_exc())
         ret['msg'] = 'Something is wrong!'
         ret['error'] = 1
+    return json.dumps(ret)
+
 
 #############################################
 #                                           #
@@ -189,44 +144,39 @@ def add_user():
 def login():
     ret = {}
     try:
-        sumSessionCounter()
         email = request.form['email']
         password = request.form['password']
 
         if mdb.user_exists(email):
             pw_hash = mdb.get_password(email)
-            print 'password in server, get from db class', pw_hash
+            print('password in server, get from db class', pw_hash)
             passw = bcrypt.check_password_hash(pw_hash, password)
 
             if passw == True:
                 name = mdb.get_name(email)
-                session['name'] = name
-                session['email'] = email
 
                 # Login Successful!
                 expiry = datetime.datetime.utcnow() + datetime.\
-                    timedelta(minutes=15)
+                    timedelta(minutes=30)
 
                 token = jwt.encode({'user': email, 'exp': expiry},
                                    app.config['secretkey'], algorithm='HS256')
                 # flask_login.login_user(user, remember=False)
                 ret['msg'] = 'Login successful'
-                ret['err'] = 0
+                ret['success'] = True
                 ret['token'] = token.decode('UTF-8')
 
             else:
                 ret['msg'] = 'Password is not match!'
-                ret['error'] = 1
-                return jsonify(ret)
+                ret['success'] = False
 
         else:
             ret['msg'] = 'email is not exist!'
             ret['error'] = 1
-            return jsonify(ret)
 
     except Exception as exp:
         ret['msg'] = '%s' % exp
-        ret['err'] = 1
+        ret['success'] = False
         print(traceback.format_exc())
     return jsonify(ret)
 
@@ -236,13 +186,13 @@ def login():
 #              SESSION LOGOUT               #
 #                                           #
 #############################################
+
 @app.route('/api/logout')
-def clearsession():
+@token_required
+def clearsession(token):
     ret = {}
     try:
-        sumSessionCounter()
-        email = session['email']
-        session.clear()
+        email = token['user']
         ret['msg'] = 'Logout successful'
         ret['err'] = 0
     except Exception as exp:
@@ -257,6 +207,7 @@ def clearsession():
 #                                           #
 #############################################
 @app.route("/api/reset_password", methods=['POST'])
+@token_required
 def reset_password():
     try:
         ret = {}
@@ -291,7 +242,7 @@ def reset_password():
             ret['err'] = 1
 
     except Exception as exp:
-        print 'reset_password():: Got exception: %s' % exp
+        print ('reset_password():: Got exception: %s' % exp)
         print(traceback.format_exc())
         ret["error"] = 1
         ret["msg"] = '%s' % exp
@@ -303,35 +254,35 @@ def reset_password():
 #              SET PET INFORMATION          #
 #                                           #
 #############################################
+
+@token_required
 @app.route("/api/set_pet_info", methods=['POST'])
-def set_pet_info():
+@token_required
+def set_pet_info(token):
     ret = {}
     try:
-        sumSessionCounter()
         email = request.form['email']
         name = request.form['name']
         breed = request.form['breed']
         age = request.form['age']
         gender = request.form['gender']
-        email_session = session['email']
+        user_email = token['user']
 
-        if email == email_session:
+        if email == user_email:
             mdb.add_pet(name, email, breed, age, gender)
             ret["msg"] = 'Add pet successfully!'
-            ret['err'] = 0
-            return json.dumps(ret)
+            ret['success'] = True
 
         else:
             ret["msg"] = 'your email is wrong!'
-            ret['err'] = 1
-            return json.dumps(ret)
+            ret['success'] = False
 
     except Exception as exp:
         print('set_pet_info() :: Got exception: %s' % exp)
         print(traceback.format_exc())
         ret["msg"] = 'User is not login!'
-        ret['err'] = 1
-        return json.dumps(ret)
+        ret['success'] = False
+    return json.dumps(ret)
 
 
 #############################################
@@ -340,32 +291,28 @@ def set_pet_info():
 #                                           #
 #############################################
 @app.route("/api/set_vaccination", methods=['POST'])
-def set_vaccination():
+@token_required
+def set_vaccination(token):
     ret = {}
     try:
-        sumSessionCounter()
-        name = request.form['name']
+
+        email = token["user"]
+        pet_name = request.form['name']
         date = request.form['date']
         notes = request.form['notes']
-        email = session['email']
-
-        if mdb.pet_name(name, email):
-            mdb.add_vaccination(name, email, date, notes)
+        if mdb.pet_name(pet_name, email):
+            mdb.add_vaccination(pet_name, email, date, notes)
             ret["msg"] = 'Add pet vaccination successfully!'
-            ret['err'] = 0
-            return json.dumps(ret)
-
+            ret['success'] = True
         else:
             ret["msg"] = 'Name is incorrect!'
-            ret['err'] = 1
-            return json.dumps(ret)
-
+            ret['success'] = False
     except Exception as exp:
         print('set_vaccination() :: Got exception: %s' % exp)
         print(traceback.format_exc())
         ret["msg"] = 'User is not login!'
-        ret['err'] = 1
-        return json.dumps(ret)
+        ret['success'] = False
+    return json.dumps(ret)
 
 
 #################################################
@@ -374,22 +321,20 @@ def set_vaccination():
 #                                               #
 #################################################
 @app.route("/api/get_vaccination", methods=['GET'])
-def get_vaccination():
+@token_required
+def get_vaccination(token):
     ret = {}
     try:
-        sumSessionCounter()
-        email = session['email']
+        email = token["user"]
         result = mdb.my_pet_vaccination(email)
         ret["msg"] = "%s" % mdb.my_pet_vaccination(email)
-        ret['err'] = 0
-        return json.dumps(ret)
-
+        ret['success'] = True
     except Exception as exp:
         print('get_vaccination() :: Got exception: %s' % exp)
         print(traceback.format_exc())
-        ret["msg"] = 'User is not login!'
-        ret['err'] = 1
-        return json.dumps(ret)
+        ret["msg"] = '%s' % exp
+        ret['success'] = False
+    return json.dumps(ret)
 
 
 #################################################
@@ -398,22 +343,19 @@ def get_vaccination():
 #                                               #
 #################################################
 @app.route("/api/get_pet_info", methods=['GET'])
-def get_pet_info():
+@token_required
+def get_pet_info(token):
     ret = {}
     try:
-        sumSessionCounter()
-        email = session['email']
-        result = mdb.my_pet_info(email)
+        email = token["user"]
         ret["msg"] = "%s" % mdb.my_pet_info(email)
-        ret['err'] = 0
-        return json.dumps(ret)
-
+        ret['success'] = True
     except Exception as exp:
         print('get_pet_info() :: Got exception: %s' % exp)
         print(traceback.format_exc())
-        ret["msg"] = 'User is not login!'
-        ret['err'] = 1
-        return json.dumps(ret)
+        ret["msg"] = '%s' % exp
+        ret['success'] = False
+    return json.dumps(ret)
 
 
 #################################################
@@ -423,4 +365,4 @@ def get_pet_info():
 #################################################
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='127.0.0.1', port=port, debug=True, threaded=True)
+    app.run(host='0.0.0.0', port=port, debug=True, threaded=True)

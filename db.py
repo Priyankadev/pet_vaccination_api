@@ -68,7 +68,7 @@ class Mdb:
             for data in result:
                 name = data['name']
                 password = data['password']
-                print 'password in db class', password
+                print('password in db class', password)
         return password
 
 #############################################
@@ -111,7 +111,7 @@ class Mdb:
         if result:
             for data in result:
                 name = data['name']
-                print 'password in db class', name
+                print('password in db class', name)
         return name
 
     def get_security_answer(self, email):
@@ -120,7 +120,7 @@ class Mdb:
         if result:
             for data in result:
                 answer = data['answer']
-                print 'password in db class', answer
+                print ('password in db class', answer)
         return answer
 
     def set_password(self, email, pw_hash):
@@ -148,7 +148,7 @@ class Mdb:
     def add_vaccination(self, name, email, date, notes):
         try:
             rec = {
-                'name': name,
+                'pet_name': name,
                 'email': email,
                 'date': date,
                 'notes': notes
