@@ -196,7 +196,6 @@ def clearsession(token):
 #                                           #
 #############################################
 @app.route("/api/reset_password", methods=['POST'])
-@token_required
 def reset_password():
     try:
         ret = {}
@@ -251,7 +250,7 @@ def set_pet_info(token):
     ret = {}
     try:
         email = request.form['email']
-        pet_name = request.form['name']
+        pet_name = request.form['pet_name']
         breed = request.form['breed']
         age = request.form['age']
         gender = request.form['gender']
@@ -269,7 +268,7 @@ def set_pet_info(token):
     except Exception as exp:
         print('set_pet_info() :: Got exception: %s' % exp)
         print(traceback.format_exc())
-        ret["msg"] = 'User is not login!'
+        ret["msg"] = '%s' % exp
         ret['success'] = False
     return json.dumps(ret)
 
@@ -286,7 +285,7 @@ def set_vaccination(token):
     try:
 
         email = token["user"]
-        pet_name = request.form['name']
+        pet_name = request.form['pet_name']
         date = request.form['date']
         notes = request.form['notes']
         if mdb.pet_name(pet_name, email):

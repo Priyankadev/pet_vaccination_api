@@ -52,8 +52,8 @@ class Mdb:
     def user_exists(self, email):
         return self.db.user.find({'email': email}).count() > 0
 
-    def pet_name(self, name, email):
-        return self.db.pet.find({'name': name, 'email': email}).count() > 0
+    def pet_name(self, pet_name, email):
+        return self.db.pet.find({'pet_name': pet_name, 'email': email}).count() > 0
 
 #############################################
 #                                           #
