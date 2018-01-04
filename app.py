@@ -1,25 +1,14 @@
-from flask import Flask, request,  jsonify, render_template,\
-    session, url_for, redirect, flash, send_from_directory
-# from flask_login import LoginManager, UserMixin, login_user, login_required,\
-#                         logout_user, current_user
-# from flask_admin import Admin, BaseView, expose
-# import uuid
+from flask import Flask, request,  jsonify, render_template
 from flask.ext.bcrypt import Bcrypt
 from bson.objectid import ObjectId
 from functools import wraps
-# import time
 from datetime import datetime
 import datetime
 import traceback
-# import flask_login
-# import flask
 import json
 import jwt
 import os
 from db import Mdb
-# from werkzeug.utils import secure_filename
-# from wtforms.fields import SelectField
-# # from utils import log
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
