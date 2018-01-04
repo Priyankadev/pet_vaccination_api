@@ -52,6 +52,9 @@ class Mdb:
     def user_exists(self, email):
         return self.db.user.find({'email': email}).count() > 0
 
+    def pet_name(self, name, email):
+        return self.db.pet.find({'name': name, 'email': email}).count() > 0
+
 #############################################
 #                                           #
 #               GET NEW PASSWORD            #
@@ -142,8 +145,28 @@ class Mdb:
             print("add_pet() :: Got exception: %s", exp)
             print(traceback.format_exc())
 
+    def add_vaccination(self, name, email, date, notes):
+        try:
+            rec = {
+                'name': name,
+                'email': email,
+                'date': date,
+                'notes': notes
+            }
+            self.db.vaccination.insert(rec)
+        except Exception as exp:
+            print("add_vaccination() :: Got exception: %s", exp)
+            print(traceback.format_exc())
+
     def my_pet_info(self, email):
         result = self.db.pet.find({'email': email})
+        ret = []
+        for data in result:
+            ret.append(data)
+        return ret
+
+    def my_pet_vaccination(self, email):
+        result = self.db.vaccination.find({'email': email})
         ret = []
         for data in result:
             ret.append(data)

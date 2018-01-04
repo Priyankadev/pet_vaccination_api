@@ -334,6 +334,64 @@ def set_pet_info():
         return json.dumps(ret)
 
 
+#############################################
+#                                           #
+#              SET PET INFORMATION          #
+#                                           #
+#############################################
+@app.route("/api/set_vaccination", methods=['POST'])
+def set_vaccination():
+    ret = {}
+    try:
+        sumSessionCounter()
+        name = request.form['name']
+        date = request.form['date']
+        notes = request.form['notes']
+        email = session['email']
+
+        if mdb.pet_name(name, email):
+            mdb.add_vaccination(name, email, date, notes)
+            ret["msg"] = 'Add pet vaccination successfully!'
+            ret['err'] = 0
+            return json.dumps(ret)
+
+        else:
+            ret["msg"] = 'Name is incorrect!'
+            ret['err'] = 1
+            return json.dumps(ret)
+
+    except Exception as exp:
+        print('set_vaccination() :: Got exception: %s' % exp)
+        print(traceback.format_exc())
+        ret["msg"] = 'User is not login!'
+        ret['err'] = 1
+        return json.dumps(ret)
+
+
+#################################################
+#                                               #
+#              GET PET INFORMATION              #
+#                                               #
+#################################################
+@app.route("/api/get_vaccination", methods=['GET'])
+def get_vaccination():
+    ret = {}
+    try:
+        sumSessionCounter()
+        email = session['email']
+        result = mdb.my_pet_vaccination(email)
+        ret["msg"] = "%s" % mdb.my_pet_vaccination(email)
+        ret['err'] = 0
+        return json.dumps(ret)
+
+    except Exception as exp:
+        print('get_vaccination() :: Got exception: %s' % exp)
+        print(traceback.format_exc())
+        ret["msg"] = 'User is not login!'
+        ret['err'] = 1
+        return json.dumps(ret)
+
+
 #################################################
 #                                               #
 #              GET PET INFORMATION              #

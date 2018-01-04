@@ -190,6 +190,61 @@
 </div>
 </div>
     <hr>
+
+<div class="row">
+<div class="col-sm-6">
+    <h3> Set Vaccination information</h3>
+    <form action="/api/set_vaccination" method="post">
+    <div class="form-group">
+        <label class="control-label col-sm-3" >Name:</label>
+        <div class="col-sm-9">
+            <input type="text" name="name" placeholder="Enter name" value="" required="">
+        </div>
+        <label class="control-label col-sm-3" >Date:</label>
+        <div class="col-sm-9">
+            <input type="date" name="date"  value="" required="">
+        </div>
+        <label class="control-label col-sm-3">Notes:</label>
+        <div class="col-sm-9">
+            <input type="text" name="notes" value="" placeholder="Enter Text" required="">
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-9">
+                <button type="submit" class="btn btn-default">Submit</button>
+                <a href="#" class="btn btn-default" role="button">Link</a>
+            </div>
+        </div>
+    </div>
+</form>
+</div>
+
+<div class="col-sm-6">
+    <h3> Get pet Vaccination</h3>
+    <form action="/api/get_vaccination">
+    <div class="form-group">
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-9">
+                <button type="submit" class="btn btn-default">Submit</button>
+                <a href="#" class="btn btn-default" role="button">Link</a>
+            </div>
+        </div>
+    </div>
+</form>
+<hr>
+</div>
+
+
+</div>
+    <hr>
+
+
+
+
+
+
+
+
+
 <div class="row">
 <div class="col-sm-6">
     <h3> Get pet Information</h3>
