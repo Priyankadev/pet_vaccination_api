@@ -33,7 +33,6 @@ class JSONEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, o)
 
 
-
 #############################################
 #                                           #
 #              TOKEN REQUIRED               #
@@ -242,8 +241,6 @@ def reset_password():
 #              SET PET INFORMATION          #
 #                                           #
 #############################################
-
-@token_required
 @app.route("/api/set_pet_info", methods=['POST'])
 @token_required
 def set_pet_info(token):
