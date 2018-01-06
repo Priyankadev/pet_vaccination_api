@@ -148,8 +148,9 @@
 
 <div class="col-sm-6">
     <h3> Set pet Information</h3>
-    <form action="/api/set_pet_info" method="post">
+    <form action="/api/set_pet_info" method="post", enctype="multipart/form-data">
     <div class="form-group">
+
         <label class="control-label col-sm-3" >Email:</label>
         <div class="col-sm-9">
             <input type="email" name="email" placeholder="Enter email" value="" required="">
@@ -177,6 +178,15 @@
         <div class="col-sm-9">
             <input type="radio" name="gender" value="male" checked> Male
             <input type="radio" name="gender" value="female"> Female<br>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <label class="control-label col-sm-3" >Pet Image:</label>
+                <div class="col-sm-9">
+                <input type="file" name="img" id="pic">
+                </div>
+            </div>
         </div>
 
         <div class="form-group">

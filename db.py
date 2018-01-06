@@ -129,16 +129,10 @@ class Mdb:
             {'$set': {'password': pw_hash}},
             upsert=True, multi=True)
 
-    def add_pet(self, name, email, breed, age, gender):
+    def add_pet(self, port):
         try:
-            ts = datetime.datetime.today().strftime("%a %b %d %X  %Y ")
             rec = {
-                'pet_name': name,
-                'email': email,
-                'breed': breed,
-                'age': age,
-                'gender': gender,
-                'creation_date': ts
+                'pet_details': port
             }
             self.db.pet.insert(rec)
         except Exception as exp:

@@ -1,4 +1,5 @@
-from flask import Flask, request,  jsonify, render_template
+from flask import Flask, request, jsonify, render_template, flash, \
+    send_from_directory, redirect
 from flask.ext.bcrypt import Bcrypt
 from bson.objectid import ObjectId
 from functools import wraps
@@ -9,6 +10,8 @@ import json
 import jwt
 import os
 from db import Mdb
+from werkzeug.utils import secure_filename
+from wtforms.fields import SelectField
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
@@ -191,7 +194,7 @@ def clearsession(token):
 
 #############################################
 #                                           #
-#              REGET PASSWORD               #
+#              RESET PASSWORD               #
 #                                           #
 #############################################
 @app.route("/api/reset_password", methods=['POST'])
@@ -238,25 +241,85 @@ def reset_password():
 
 #############################################
 #                                           #
+#               Upload                      #
+#                                           #
+#############################################
+dir_path = os.path.dirname(os.path.realpath(__file__))
+file_path = '%s/%s' % (dir_path, 'uploads')
+
+
+UPLOAD_FOLDER = file_path
+ALLOWED_EXTENSION = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+
+#############################################
+#                                           #
+#              PATH OF IMAGE                #
+#                                           #
+#############################################
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSION
+
+
+#############################################
+#                                           #
 #              SET PET INFORMATION          #
 #                                           #
 #############################################
 @app.route("/api/set_pet_info", methods=['POST'])
 @token_required
 def set_pet_info(token):
+    prefix = request.base_url[:-len('/api/set_pet_info')]
+    ts = datetime.datetime.today().strftime("%a %b %d %X  %Y ")
+    port = {}
     ret = {}
     try:
         email = request.form['email']
-        pet_name = request.form['pet_name']
+        pet_name = request.form['name']
         breed = request.form['breed']
         age = request.form['age']
         gender = request.form['gender']
+        img_file = request.files['img']
         user_email = token['user']
 
         if email == user_email:
-            mdb.add_pet(pet_name, email, breed, age, gender)
-            ret["msg"] = 'Add pet successfully!'
-            ret['success'] = True
+            # mdb.add_pet(pet_name, email, breed, age, gender)
+
+            if img_file.filename == '':
+                flash('No Selected file')
+                return redirect(request.url)
+            # image uploads
+
+            if img_file and allowed_file(img_file.filename):
+                filename = secure_filename(img_file.filename)
+
+                img_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                img = '%s/%s' % (file_path, filename)
+
+            print "file_path:", file_path
+            save_file_url = "%s/uploads/%s" % (prefix, filename)
+            print "save_file_url: ", save_file_url
+
+            port['img'] = save_file_url
+            port['pet_name'] = pet_name
+            port['breed'] = breed
+            port['age'] = age
+            port['gender'] = gender
+            port['email'] = email
+            port['creation_time'] = ts
+
+            mdb.add_pet(port)
+            ret["msg"] = 'Add portfolio successfully!'
+            ret['err'] = 0
+            return json.dumps(ret)
 
         else:
             ret["msg"] = 'your email is wrong!'
